@@ -1,0 +1,46 @@
+// link = https://leetcode.com/problems/subarray-sum-equals-k
+class Solution {
+  //n*n
+  public int subarraySumBruteForce(int[] nums, int k) {
+        int count=0;
+        //brute force using 2 for loops
+        for(int i=0;i<nums.length;i++)
+        {
+            if(nums[i] == k)
+            {
+                ++count;
+            }
+            int sum=nums[i];
+
+            for(int j=i+1;j<nums.length;j++)
+            {
+                sum=sum+nums[j];
+                if(sum == k)
+                {
+                    ++count;
+                }
+            }
+        }
+        return count;
+        
+    }
+
+    //optimized approach using prefix some to calculate the sum
+    //using sum - k, to find the count
+    //using hashmap to store
+
+    public int subarraySum(int[] nums, int k) {
+        int count=0,sum=0;
+        Map<Integer,Integer> frequencyMap = new HashMap<>();
+        frequencyMap.put(0,1);
+        for(int i=0;i<nums.length;i++)
+        {
+          sum=sum+nums[i];
+          int currentCount = frequencyMap.getOrDefault(sum-k,0);
+          count=count+currentCount;
+          frequencyMap.put(sum,frequencyMap.getOrDefault(sum,0)+1);
+        }        
+        return count;
+        
+    }
+}
