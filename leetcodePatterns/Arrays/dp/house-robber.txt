@@ -1,0 +1,58 @@
+//https://leetcode.com/problems/house-robber
+class Solution {
+    //time limit execeded 
+    public int robRecursionSolution(int[] nums) {
+      return recursionSolution(nums,nums.length-1);
+    }
+    //using recursion solution
+    //we start with the last index and do backtracking 
+    //at any point we will either use the current house or not we will keep track of both
+    private int recursionSolution(int[] arr,int index)
+    {
+      if(index<0)
+      return 0;
+
+      int selectedIthHouse = recursionSolution(arr,index-2)+arr[index];
+      int notselectedIthHouse = recursionSolution(arr,index-1);
+      return Math.max(selectedIthHouse,notselectedIthHouse);
+
+    }
+
+    //using cache to improve 
+    //still tle
+    public int robwithcache(int[] nums) {
+      int cache[]=new int[nums.length+1];      
+      return recursion(nums,nums.length-1,cache);
+    }
+    //using recursion solution
+    //we start with the last index and do backtracking 
+    //at any point we will either use the current house or not we will keep track of both
+    //in a cache and will return the cache amount if found
+    public int recursion(int[] nums,int index,int[] cache)
+    {
+      if(index<0)
+      return 0;
+      if(cache[index]!=0)
+      return cache[index];
+
+      int rob_ith_house = recursion(nums,index-2,cache)+nums[index];
+      int not_rob_house =  recursion(nums,index-1,cache);
+      return cache[index] = Math.max(rob_ith_house,not_rob_house);
+    }
+
+    //using dp prev1 and 2 are our previous choices to either 
+    //rob or not rob
+    public int rob(int[] nums) {
+      int prev2 =nums[0];
+      if(nums.length == 1)
+      return prev2;
+      int prev1 = Math.max(nums[0],nums[1]);
+      for(int i=2;i<nums.length;i++)
+      {
+        int temp = prev1;
+        prev1  = Math.max(prev2+nums[i],prev1);
+        prev2 = temp;
+      }           
+      return prev1;
+    }
+}
