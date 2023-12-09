@@ -1,0 +1,110 @@
+//https://leetcode.com/problems/longest-increasing-subsequence/description/
+class Solution {
+    //
+    public int lengthOfLISDPSOlution(int[] arr) {
+    // dp[i] array will save the length longest increasing till arr[i]
+    int[] dp = new int[arr.length];
+    //dp[0] will have atleast length 1, one element is longest increasing of length 1
+    dp[0] = 1;
+    // max will contain the max length found so far
+    int max = 0;
+    for(int i=1;i<arr.length;i++) {
+        //for a element arr[i], find a smaller element before it and add +1 by adding the           //current element length
+        for(int j=0;j<i;j++) {
+            if(arr[j] < arr[i]) {
+                dp[i] = Math.max(dp[i] , dp[j]+1);
+            }
+        }
+        if(dp[i]==0) {
+            dp[i]=1;
+        }
+        // update max whenever we find length greater than previous
+        max = Math.max(max,dp[i]);
+    }
+        //if max is not found, return 1
+    return max==0?1:max;
+    }
+
+    //patience sorting 
+    //https://www.cs.princeton.edu/courses/archive/spring13/cos423/lectures/LongestIncreasingSubsequence.pdf
+    //we have piles of cards and the no of piles we make is the answer
+    /**
+    2 conditions for creating a piles of card
+        Can't place a higher-valued card onto a lowered-valued card.
+     */
+    public int lengthOfLISPiles(int[] nums){
+        //store only the last number we don't need to print the subsequence
+        HashMap<Integer,Integer> piles = new HashMap<>();
+        int size=0;
+        piles.put(size,nums[0]);
+        
+        for(int i=1;i<nums.length;i++)
+        {
+            int key=1;
+            boolean createNewPile = true;
+            //get all the values of hashmap
+            for (Map.Entry<Integer,Integer> mapElement : piles.entrySet()) {
+            int value = mapElement.getValue();
+             if(nums[i]<=value)
+             {
+                key = mapElement.getKey();
+                 //we put them on the same piles
+                 createNewPile = false;
+                 break;
+             }
+        }
+        if(createNewPile)
+        {
+          piles.put(++size,nums[i]);
+        }
+        else
+        {
+          piles.put(key,nums[i]);
+        }
+        }
+        return piles.size();
+
+    }
+
+    //optimising the above solution piles will keep increasing
+    //only when the current element is bigger that the previous one
+    //in a  way the piles in themselves will be sorted 
+    //and with sorting comes binary search
+    public int lengthOfLIS(int[] nums){
+      int arrPiles[] = new int[nums.length];
+      int size=0;
+      arrPiles[size]=nums[0];
+      for(int i=1;i<nums.length;i++)
+      {
+        if(nums[i]>arrPiles[size])
+        {
+          ++size;
+          arrPiles[size] = nums[i];
+          //System.out.println("no on pile " +nums[i] );          
+        }
+        else
+        {
+          //binary serach and replace this with the lowest number found 
+          //put this in a pile
+          int swap = binarySearch(arrPiles,size,nums[i]);
+          //System.out.println("no in pile swaped " +arrPiles[swap] );
+          arrPiles[swap] = nums[i];
+        }
+        
+      }
+      return size+1;
+    }
+    
+
+    public int binarySearch(int[]arrPiles,int anchor,int target){
+        int left=0,right=anchor;
+        while(left<right){
+            int mid=(right+left)/2;
+            if(arrPiles[mid]<target) 
+            left=mid+1;
+            else 
+            right=mid;
+        }
+        return left;
+    }
+}

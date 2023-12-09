@@ -1,0 +1,22 @@
+//https://leetcode.com/problems/climbing-stairs/
+class Solution {
+    public int climbStairs(int n) {
+        //the answer will always be 
+        //the sum of last 2 steps that you took
+        if(n <4)
+            return n;
+        else
+        {
+            int c =3,b=2,ans=0;;
+            for(int i=4;i<=n;i++)
+            {
+                ans = c + b;
+                b =c;
+                c=ans;
+                
+            }
+            //System.out.println("" +c);
+            return ans;
+        }
+    }
+}
