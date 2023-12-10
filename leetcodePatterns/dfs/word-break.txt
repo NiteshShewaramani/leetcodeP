@@ -1,0 +1,68 @@
+https://leetcode.com/problems/word-break/description/
+class Solution {
+    // for each word in dict:
+//     if current index of s starts with word:
+//         increment index to word length and recurse until end of word, returning true
+// else nothing found to work so return false
+    Boolean dp[];
+    public boolean wordBreak(String s, List<String> wordDict) {
+        dp=new Boolean[s.length()+1];
+        return func(s,wordDict,0);
+
+        
+    }
+    //true means found 
+    //false means visited but not valid combination
+    //null means not visited that index
+    public boolean func(String s,List<String> wordDict,int index)
+    {
+        //index past entire string already, means we found a solution
+        if(index>=s.length())
+        return true;
+        if(dp[index]!=null)
+        return dp[index];
+
+        boolean match=false;
+        for(String word : wordDict)
+        {
+            if(s.startsWith(word,index) && func(s,wordDict,index+word.length()))
+            {
+                // found a solution already so can break and skip work
+                match = true;   
+                break;
+            }
+
+        }
+        dp[index]=match;// save result in dp for future use
+        return dp[index];
+
+    }
+
+
+ Boolean mem[];
+    public boolean wordBreakR(String s, List<String> wordDict) {
+        mem= new Boolean[s.length()];
+        return func(0,new HashSet(wordDict),s);
+
+        
+    }
+    public boolean func(int start,Set<String> set,String s)
+    {
+        if(start == s.length())
+        return  true;
+        if(mem[start] != null)
+        return mem[start];
+
+        
+        for(int i=start+1;i<=s.length();i++)
+        {
+            if(set.contains(s.substring(start,i)) && func(i,set,s) )
+            {
+                return mem[start] = true;
+            }
+
+        }
+        return mem[start] = false;
+
+    }
+}
