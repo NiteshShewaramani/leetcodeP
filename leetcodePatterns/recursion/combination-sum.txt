@@ -1,0 +1,36 @@
+https://leetcode.com/problems/combination-sum
+class Solution {
+    List<List<Integer>>  listOfList = new ArrayList<>();
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        recursion(candidates,target,new ArrayList(),0);
+        return listOfList;
+    }
+
+    //this gives us all combination
+    private void recursion(int[] candidates, int target,List<Integer> comb,int start)
+    {
+        if(target>0)
+        {
+            //adding checks here so that we do not check 
+            //values which are not required
+            for(int i=start;i<candidates.length && target >=candidates[i];i++)
+            {
+                comb.add(candidates[i]);
+                //by passing the start index we are making sure that
+                //we will never go back
+                //for ex- 2,2,3 = 7
+                //then the next sequence will be 2,3,3=8 - it will never
+                //use the same sequence again
+                //which is the condition of the question
+                recursion(candidates,target-candidates[i],comb,i);
+                comb.remove(comb.size()-1);
+            }
+        }
+        else
+        {
+            listOfList.add(new ArrayList<>(comb));
+            return;
+        }
+    }
+}
