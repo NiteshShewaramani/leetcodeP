@@ -1,0 +1,18 @@
+https://leetcode.com/problems/single-number
+class Solution {
+    public int singleNumber(int[] nums) {
+        int ans=nums[0];
+        for(int i=1;i<nums.length;i++)
+        {
+            //using xor here as an 
+            //xor of number with itself us 0
+            //and 0 xor then single number 
+            //is the single number in itself
+            ans=ans^nums[i];
+        }
+        return ans;       
+    }
+    //another solution we can use is set 
+    //if the element exists delete it
+    //if not add it
+}
