@@ -1,0 +1,56 @@
+https://leetcode.com/problems/course-schedule
+class Solution {
+
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        ArrayList[] graph = new ArrayList[numCourses];
+        int[] courseCount =new int[numCourses];
+
+        for(int i=0;i<numCourses;i++)
+            graph[i] = new ArrayList();
+        
+        for(int i=0;i<prerequisites.length;i++)
+        {
+            int dependentCourse = prerequisites[i][0];
+            int currentCourse =   prerequisites[i][1];
+            courseCount[currentCourse]++;
+            graph[dependentCourse].add(currentCourse);
+        }
+        int totalCourses=0;
+        Queue queue = new LinkedList();
+
+        for(int i=0;i<numCourses;i++)
+        {
+            //no dependency for this course
+            if(courseCount[i]==0)
+            {
+                ++totalCourses;
+                //first we will finish the
+                //non dependent courses
+                queue.add(i);
+            }
+
+        }
+        while(queue.size()>0)
+        {
+            int value=(int)queue.poll();
+            for(int i=0;i<graph[value].size();i++)
+            {
+                int temp = (int)graph[value].get(i);
+                courseCount[temp]--;
+                if(courseCount[temp] == 0)
+                {
+                    //completed this couse
+                    ++totalCourses;
+                    queue.add(temp);
+                }
+
+            }
+        }
+        if(totalCourses == numCourses)
+        {
+            return true;
+
+        }
+        return false;       
+    }
+}

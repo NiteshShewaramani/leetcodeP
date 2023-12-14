@@ -1,0 +1,46 @@
+https://leetcode.com/problems/word-search
+class Solution {
+    boolean found =false;
+    public boolean exist(char[][] board, String word) {
+        
+        for(int n=0;n<board.length;n++)
+        {
+            for(int m=0;m<board[0].length;m++ )
+            {
+                if(recursion(board,0,n,m,word))
+                {
+                   return true; 
+                }
+            }
+        }       
+        return false;
+    }
+
+
+    private boolean recursion(char[][] board,int count,int r,int c,String word)
+    {
+        if(count == word.length())
+        {
+            return true;
+        }
+        //all conditions for outbounds and check if word is equal or not
+        if(r>=board.length||c>=board[0].length || r<0||c<0 ||word.charAt(count) != board[r][c] )
+        {
+            return false;
+
+        }
+        //it marks as current word is seen
+        board[r][c]='*';
+
+        boolean ans=recursion(board,count+1,r+1,c,word)||
+        recursion(board,count+1,r-1,c,word)||
+        recursion(board,count+1,r,c+1,word) ||
+        recursion(board,count+1,r,c-1,word);
+
+
+        //this will set the word character back to its original value
+        board[r][c]=word.charAt(count);
+        return ans;
+        
+    }
+}
