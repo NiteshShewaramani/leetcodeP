@@ -1,7 +1,25 @@
 https://leetcode.com/problems/word-search
 class Solution {
-    boolean found =false;
     public boolean exist(char[][] board, String word) {
+        //ascii value of charcters
+        int arr[] = new int[128];
+        for(int n=0;n<board.length;n++)
+        {
+            for(int m=0;m<board[0].length;m++ )
+            {
+                //keeping count of characters
+                ++arr[board[n][m]];
+            }
+        }
+        for(char ch : word.toCharArray())
+        {
+            if(--arr[ch]<0)
+            {
+                //this means the character
+                //does not exists on the board so return false
+                return false;
+            }
+        }
         
         for(int n=0;n<board.length;n++)
         {
