@@ -1,0 +1,46 @@
+https://leetcode.com/problems/move-zeroes/description/
+class Solution {
+    public void moveZeroes(int[] nums) {
+        //Step 1 move all the non zero elements to the front
+        int index=0;
+        for(int i=0;i<nums.length;i++)
+        {
+            if(nums[i]!=0)
+            {
+                nums[index++]=nums[i];
+            }
+        }
+        //step2 move all the zero elements to the back
+        while(index<nums.length)
+        {
+            nums[index++]=0;
+        }
+    }
+
+    public void moveZeroesByOneIndex(int[] nums) {
+        int left=0;
+        int right=nums.length-1;
+        while(left<right)
+        {
+            if(nums[left] == 0)
+            {
+                //swap all elements by one
+                swapElementsByOne(nums,left,right);
+                --right;
+            }
+            else
+            {
+                ++left;
+            }
+        }        
+    }
+    private void swapElementsByOne(int[] nums,int left,int right)
+    {
+        for(int i=left;i<right;i++)
+        {
+            nums[i]=nums[i+1];
+        }
+        nums[right]=0;
+
+    }
+}

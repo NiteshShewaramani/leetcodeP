@@ -1,0 +1,54 @@
+https://leetcode.com/problems/unique-paths/
+//dp solution
+class Solution {
+    public int uniquePaths(int m, int n) {
+
+        Integer[][] dp = new Integer[m][n];
+        //setting the first row and column to 1
+        for(int i = 0; i<m;i++){
+            dp[i][0] = 1;  // first column will have all value as 1
+        }
+        for(int j= 0;j<n;j++){
+            dp[0][j]=1;     // first row will have all values as 1
+        }
+        for(int i = 1;i<m;i++){
+            for(int j = 1;j<n;j++){
+                //add the previous dp value of 1 step up and 1 step on the left 
+                
+                dp[i][j] = dp[i-1][j]+dp[i][j-1]; 
+                //System.out.println(""+dp[i][j]);
+                //this will keep increasing the value of paths that we can take
+            }
+        }
+        return dp[m-1][n-1];
+        
+    }
+}
+
+//brute force recursion tle
+class Solution {
+    int count=0;
+    public int uniquePaths(int m, int n) {
+
+        recursion(m,n,0,0);
+        return count;
+        
+    }
+    public void recursion(int m,int n,int low,int high)
+    {
+        if(low==m-1 && high==n-1)
+        {
+            ++count;
+        }
+        if(low<m)
+        {
+            recursion(m,n,low+1,high);
+        }
+        if(high<n)
+        {
+            recursion(m,n,low,high+1);
+        }
+
+    }
+}
+
