@@ -1,0 +1,45 @@
+https://leetcode.com/problems/diameter-of-binary-tree/description/
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    int ans=0;
+    public int diameterOfBinaryTree(TreeNode root) {
+        if(root==null)
+        return 0;
+        height(root);
+        return ans;
+        
+    }
+    private int height(TreeNode node)
+    {
+        if(node==null)
+        return -1;
+
+        int left = height(node.left);
+        int right = height(node.right);
+        //we do +2 here because the height of a tree start from zero
+        //for ex at a root with 2 leaf nodes
+        //  1
+        //2   3
+        //the height at "1" will be 1 and height at "2" and "3"  will be 0
+        // so the diameter between them will be left + right + 2 always
+        ans=Math.max(left+right+2,ans);
+
+        return 1+Math.max(left,right);
+
+
+    }
+}

@@ -1,0 +1,30 @@
+https://leetcode.com/problems/unique-binary-search-trees/
+/**
+The idea is to use each number i as root node, then the left branch will be what's less than i, the right branch will be what's larger than i. The total number of distinct structure is their product. Thus, sum up the product for all numbers. Use a map to memorize the visited number.
+ */
+class Solution {
+    public int numTrees(int n) {
+        Map<Integer,Integer> map=new HashMap<>();
+        map.put(0,1);
+        map.put(1,1);
+        return recursive(map,n);
+    }
+    private int recursive(Map<Integer,Integer> map,int n)
+    {
+        if(map.containsKey(n))
+        return map.get(n);
+
+        int sum=0;
+        for(int i=1;i<=n;i++)
+        {
+            /**
+            the number of different trees is depending on the number of different left subtrees * the number of different right subtrees.
+            i-1 is left subtree and n-i is right subtree
+             */
+            sum =sum+ recursive(map,i-1) * recursive(map,n-i);            
+        }
+        map.put(n,sum);
+        return sum;
+
+    }
+}
