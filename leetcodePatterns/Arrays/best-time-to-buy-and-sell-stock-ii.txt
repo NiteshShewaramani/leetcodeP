@@ -1,0 +1,74 @@
+https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/
+class Solution{
+    public int maxProfit(int[] prices)
+    {
+        if(prices.length<2)
+        return 0;
+        int totalProfit=0;
+        int valley=0;
+        int peak=0;
+        for(int i=0;i<prices.length;i++)
+        {
+            while(i<prices.length-1 && prices[i]>=prices[i+1])
+            ++i;
+            valley=prices[i];
+            while(i<prices.length-1 && prices[i]<=prices[i+1])
+            ++i;
+            peak=prices[i];
+            totalProfit=totalProfit + peak-valley;
+        }
+        return totalProfit;
+    }
+}
+//we are buying at the lowest and selling at the heighest always
+
+// class Solution{
+//     public int maxProfit(int[] prices)
+//     {
+//         if(prices.length<2)
+//         return 0;
+
+//         int totalProfit=0;
+//         for(int i=1;i<prices.length;i++)
+//         {
+//             if(prices[i]>prices[i-1])
+//             totalProfit=totalProfit+ prices[i]-prices[i-1];
+
+//         }
+//         return totalProfit;
+//     }
+// }
+/**
+If you don't understand the totalProfit += prices[i] - prices[i - 1] part . Imagine that you are doing day trading. If the stock price keeps going up, then you won't have to sell any stock and keep making profit, that's the same as totalProfit += prices[i] - prices[i - 1] because the stock price of day i th keeps getting higher than day i - 1 th. But once the stock price go down, and in this case you knew that it would happen (you got the prices of all days), you would have sold the stock in the previous day. And we skip buying the stock until the stock market go up again, in other words: if (prices[i - 1] < prices[i]) { start making profit } - else no trading for that day. Do this continuously, you are basically picking out all the up time (the greedy part) of the stock market and that will sum up to the highest possible overall profit.
+ */
+//TLE brute force
+class Solution {
+    int maxProfit=0;
+    public int maxProfit(int[] prices) {
+        recursion(prices,0,0);
+        return maxProfit;
+        
+    }
+
+    public void recursion(int[] prices,int start,int profit)
+    {
+        if(start>=prices.length)
+        return;
+
+        for(int i=start+1;i<prices.length;i++)
+        {
+            if(prices[i]>prices[start])
+            {
+                //sell
+                int temp = prices[i]-prices[start];
+                //System.out.println("prices[start] "+ prices[start] + " end " +prices[i]);
+                //System.out.println(" -- > " +profit+ " " +temp);
+                profit = profit+ temp;
+                recursion(prices,i+1,profit);               
+                maxProfit=Math.max(maxProfit,profit);
+                profit=profit-temp;
+            }
+        }
+        recursion(prices,start+1,profit);
+    }
+}
