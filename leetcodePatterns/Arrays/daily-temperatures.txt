@@ -1,0 +1,35 @@
+https://leetcode.com/problems/daily-temperatures/description/
+class Solution {
+    //https://leetcode.com/problems/daily-temperatures/solutions/788835/java-7ms-explanation-with-graphic/
+    public int[] dailyTemperatures(int[] temperatures) {
+        int length=temperatures.length;
+        int ans[]=new int[length];
+
+        for(int i=length-1;i>=0;i--)
+        {
+            for(int day=i-1;day>=0 && temperatures[i]>temperatures[day];--day)
+            {
+                ans[day]=i-day;
+            }           
+        }
+        return ans;        
+    }
+}
+
+class Solution {
+    public int[] dailyTemperatures(int[] temperatures) {
+        Stack<Integer> stack=new Stack<>();
+        int length=temperatures.length;
+        int ans[]=new int[length];
+
+        for(int i=0;i<length;i++)
+        {
+            while(!stack.empty() && temperatures[i]>temperatures[stack.peek()])
+            {
+                ans[stack.peek()]=i-stack.pop();
+            }
+            stack.push(i);
+        }
+        return ans;        
+    }
+}

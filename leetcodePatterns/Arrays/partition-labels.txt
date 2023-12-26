@@ -1,0 +1,55 @@
+https://leetcode.com/problems/partition-labels
+
+class Solution {
+
+//https://leetcode.com/problems/partition-labels/solutions/310476/simple-java-solution-3ms-37-1m/
+    public List<Integer> partitionLabels(String s) {
+        char[] sr = s.toCharArray();
+        List<Integer> ans=new ArrayList<>();
+        int last[]=new int[26];
+        char BASE='a';
+        for(int i=0;i<s.length();i++)
+        {
+            last[sr[i]-BASE]=i;
+        }
+        int mx=0,count=0;
+        for(int i=0;i<s.length();i++)
+        {
+            mx = Math.max(mx,last[sr[i]-BASE]);
+            ++count;
+            if(mx==i)
+            {
+                ans.add(count);
+                count=0;
+            }
+        }
+        return ans;      
+    }
+    
+}
+
+class Solution {
+
+//https://leetcode.com/problems/partition-labels/solutions/1868842/java-c-visually-explaineddddd/
+    public List<Integer> partitionLabels(String s) {
+        List<Integer> ans=new ArrayList<>();
+        Map<Character,Integer> map=new HashMap<>();
+        for(int i=0;i<s.length();i++)
+        {
+            map.put(s.charAt(i),i);                        
+        }
+        int max=0,prev=-1;
+        for(int i=0;i<s.length();i++)
+        {
+            max=Math.max(max,map.get(s.charAt(i)));
+            if(max==i)
+            {
+                //partition
+                int size=(max-prev);
+                ans.add(size);
+                prev=max;
+            }
+        }        
+        return ans;      
+    }
+}
