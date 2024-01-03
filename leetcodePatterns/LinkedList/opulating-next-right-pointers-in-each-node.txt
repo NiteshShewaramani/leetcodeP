@@ -1,0 +1,61 @@
+https://leetcode.com/problems/populating-next-right-pointers-in-each-node
+/*
+// Definition for a Node.
+class Node {
+    public int val;
+    public Node left;
+    public Node right;
+    public Node next;
+
+    public Node() {}
+    
+    public Node(int _val) {
+        val = _val;
+    }
+
+    public Node(int _val, Node _left, Node _right, Node _next) {
+        val = _val;
+        left = _left;
+        right = _right;
+        next = _next;
+    }
+};
+*/
+
+class Solution {
+    public Node connect(Node root) {
+        
+         if(root == null)
+            return root;
+        
+        // We need to keep track of the left node.
+        Node leftNode = root;
+        
+        while(leftNode.left != null) {
+            
+            Node node = leftNode;
+            
+            while(node != null) {
+                
+                // The next node of the left child is the right child.
+                node.left.next = node.right;
+                
+                // If the sibling of our node isn't null.
+                if(node.next != null) {
+                    
+                    // The next node of the right child is the left child of the sibling node
+                    node.right.next = node.next.left;
+                }
+                
+                // Change the node with the rigth sibling
+                node = node.next;
+            }
+            
+            leftNode = leftNode.left;
+        }
+        
+        return root;
+    }
+    
+    
+}

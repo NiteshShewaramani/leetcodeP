@@ -1,0 +1,26 @@
+https://leetcode.com/problems/minimum-size-subarray-sum
+class Solution {
+    public int minSubArrayLen(int target, int[] nums) {
+        int left=0;
+        int right=0;
+        int minDiff=Integer.MAX_VALUE;
+        int sum=0;
+
+        for(;left<nums.length && right<nums.length;)
+        {
+            sum=sum+nums[right++];
+                while(sum>=target && left<nums.length)
+                {
+                    //System.out.println("sum is" + sum);
+                    minDiff=Math.min(minDiff,(right-left));
+                    //System.out.println("minDiff is" + minDiff);
+                    sum=sum-nums[left++];
+                }
+        }
+        if(minDiff==Integer.MAX_VALUE)
+        return 0;
+        else
+        return minDiff;
+        
+    }
+}

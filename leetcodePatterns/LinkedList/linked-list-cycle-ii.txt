@@ -1,0 +1,53 @@
+https://leetcode.com/problems/linked-list-cycle-ii/description/
+public class Solution {
+    public ListNode detectCycle(ListNode head) {
+        ListNode fast = head;
+        ListNode slow = head;
+        ListNode ans = null;
+         if(head==null || head.next==null)
+            return null;
+        if(head != null)
+        {
+            while(fast != null && fast.next != null)
+            {
+                
+                fast = fast.next.next;
+                slow = slow.next;
+                if(fast == slow)
+                {
+                    break;
+                }
+            }
+        }
+        if (slow != fast)
+            return null;
+        slow=head;
+        while(slow!=fast){
+            slow=slow.next;
+            fast=fast.next;
+        }
+            return slow;
+    }
+}
+
+public class Solution {
+    public ListNode detectCycle(ListNode h) {
+        HashSet<ListNode> s = new HashSet<ListNode>();
+        while (h != null) {
+            // If we have already has this node
+            // in hashmap it means their is a cycle
+            // (Because  we are encountering the
+            // node second time).
+            //this will be the first node that we encounter
+            //second time
+            if (s.contains(h))
+                return h;
+ 
+            // If we are seeing the node for
+            // the first time, insert it in hash
+            s.add(h);
+            h = h.next;
+        }
+        return null;        
+    }
+}
