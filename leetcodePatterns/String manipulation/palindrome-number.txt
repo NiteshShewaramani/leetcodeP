@@ -1,0 +1,35 @@
+https://leetcode.com/problems/palindrome-number/description/
+class Solution {
+    public boolean isPalindrome(int x) {
+        String str = ""+x;
+        int left = 0;
+        int right =str.length()-1;
+        while(left < right)
+        {
+            if(str.charAt(left) != str.charAt(right))
+            return false;
+
+            ++left;
+            --right;
+        } 
+        return true;
+
+        //getting the reverse of number 
+        //using /10 and %10 
+
+    //another solution
+    // if(x<0){
+    //         return false;
+    //     }
+    //     int reverse = 0;
+    //     int y = x;
+    //     while(y!=0){
+    //         reverse = reverse*10 + y%10;
+    //         y= y/10;
+    //     }
+    //     return rev == x;
+        
+    }
+
+    
+}
