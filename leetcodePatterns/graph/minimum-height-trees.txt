@@ -1,0 +1,58 @@
+https://leetcode.com/problems/minimum-height-trees/
+explanation :https://leetcode.com/problems/minimum-height-trees/solutions/1631179/c-python-3-simple-solution-w-explanation-brute-force-2x-dfs-remove-leaves-w-bfs/
+class Solution {
+    public List<Integer> findMinHeightTrees(int n, int[][] edges) {
+        if(n==1)
+        return Arrays.asList(0);
+
+        List<List<Integer>> graph = new ArrayList<>();
+        int links[]=new int[n];
+        createGraph(graph,links,n,edges);
+
+        List<Integer> leaves = new ArrayList<>();
+        for(int i=0;i<n;i++)
+        {
+            if(links[i]==1)
+            {
+                leaves.add(i);
+            }
+        }
+
+        while(n>2)
+        {
+            ArrayList<Integer> newLeaves = new ArrayList<>();
+            for(int lea : leaves)
+            {
+                for(int getConnectedToLeaves : graph.get(lea))
+                {
+                    links[getConnectedToLeaves]--;
+                    if(links[getConnectedToLeaves]==1)
+                    newLeaves.add(getConnectedToLeaves);
+                }
+            }
+            //reducing the size of n by no of nodes removed
+            n=n-leaves.size();
+            leaves=newLeaves;
+        }
+        return leaves;
+
+
+
+        
+    }
+
+    private void createGraph(List<List<Integer>> graph,int links[],int n,int[][] edges)
+    {
+        for(int i=0;i<n;i++)
+        {
+            graph.add(new ArrayList());
+        }
+        for(int edge[] : edges)
+        {
+            graph.get(edge[0]).add(edge[1]);
+            graph.get(edge[1]).add(edge[0]);
+            links[edge[0]]++;
+            links[edge[1]]++;
+        }
+    }
+}

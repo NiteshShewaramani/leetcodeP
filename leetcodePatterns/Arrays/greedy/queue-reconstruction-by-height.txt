@@ -1,0 +1,32 @@
+/**
+Explanation : https://leetcode.com/problems/queue-reconstruction-by-height/solutions/2211641/visual-explanation-java-greedy/
+ */
+class Solution {
+    public int[][] reconstructQueue(int[][] people) {
+     ArrayList<int[]> list = new ArrayList<>();
+        int n=people.length;
+        Arrays.sort(people,(a,b)->{
+            if(a[0]!=b[0])
+                return b[0]-a[0];//sorting in decreasing order
+            return a[1]-b[1];//or in increasing order of k if a[0]==b[0]
+        });
+           int[][] res = new int[n][2];
+         int i=0;
+         //sorted array will be
+         //7-0 , 7-1 , 6-1 , 5-0,5-2 , 4-4
+        for(int[] a:people){
+            list.add(a[1],a);//adding based on index
+            //1st 7 is added at 0th position
+            //then after some time 5 is encountered with same a[1] value
+            //so it is placed in 0th position
+            // System.out.println(a[1]+" "+a[0]+" ");
+          
+        }
+        for(int[] a: list){ 
+            res[i]=a;
+            i++;   
+        }
+        return res;
+        
+    }
+}
