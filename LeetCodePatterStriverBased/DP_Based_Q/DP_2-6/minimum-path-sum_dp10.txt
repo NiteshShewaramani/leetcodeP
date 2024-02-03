@@ -1,0 +1,84 @@
+https://leetcode.com/problems/minimum-path-sum/
+class Solution {
+    public int calculate(int[][] grid,int m,int n,int dp[][])
+    {
+        // If we're out of bounds, return a large value
+        if(m>=grid.length || n>=grid[0].length)
+        return (int) Math.pow(10, 9);
+        if(m==grid.length-1 && n==grid[0].length-1)
+        return grid[m][n];
+
+        if(dp[m][n] != -1)
+        return dp[m][n];
+
+        int right =grid[m][n] + calculate(grid,m,n+1,dp) ;
+        int down =grid[m][n] + calculate(grid,m+1,n,dp) ;
+        dp[m][n] = Math.min(right,down) ;     
+        return dp[m][n];  
+
+    }
+    public int minPathSumMemorization(int[][] grid) {
+        int dp[][] = new int[grid.length][grid[0].length];
+        for(int[] row : dp)
+        Arrays.fill(row,-1);
+        return calculate(grid,0,0,dp);
+    }
+
+    public int minPathSumTabular(int[][] grid) {
+        int dp[][] = new int[grid.length][grid[0].length];
+
+        dp[0][0]=grid[0][0];
+        for(int i=0;i<grid.length;i++)
+        {
+            for(int j=0;j<grid[0].length;j++)
+            {
+                if(i==0 && j==0)
+                continue;
+                int right=(int) Math.pow(10, 9);
+                int down =(int) Math.pow(10, 9);
+                if(j>0)
+                {
+                    right = grid[i][j] + dp[i][j-1];
+                }
+                if(i>0)
+                {
+                    down = grid[i][j] + dp[i-1][j] ;
+                }
+                
+                dp[i][j] = Math.min(right,down) ;
+            }
+        }
+        return dp[grid.length-1][grid[0].length-1];       
+    }
+
+    public int minPathSum(int[][] grid) {
+        int prev[] = new int[grid[0].length];
+        for(int i=0;i<grid.length;i++)
+        {
+            int current[] = new int[grid[0].length];
+            for(int j=0;j<grid[0].length;j++)
+            {
+                if(i==0 && j==0)
+                {
+                    current[0]=grid[i][j];
+                    continue;
+                }               
+                int right=(int) Math.pow(10, 9);
+                int down =(int) Math.pow(10, 9);
+                if(j>0)
+                {
+                    // Add the value from the left if it's not out of bounds
+                    right = grid[i][j] + current[j-1];
+                }
+                if(i>0)
+                {
+                    // Add the value from above if it's not out of bounds
+                    down = grid[i][j] + prev[j] ;
+                }                
+                current[j] = Math.min(right,down) ;
+            }
+            prev=current;
+        }
+        return prev[grid[0].length-1];       
+    }
+}

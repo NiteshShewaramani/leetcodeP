@@ -1,0 +1,103 @@
+https://leetcode.com/problems/triangle/description/
+
+class Solution {
+
+    private int calculateSum(List<List<Integer>> triangle, int level, 
+    int index,int dp[][] ) {
+        if(dp[level][index]!=-1)
+        return dp[level][index];
+        int sum=triangle.get(level).get(index);
+        if (level + 1 < triangle.size()) {
+            sum = sum + Math.min(
+            calculateSum(triangle, level + 1, index,dp),
+            calculateSum(triangle, level + 1, index + 1,dp));
+        }
+        dp[level][index]=sum;
+        return dp[level][index];
+    }
+
+    public int minimumTotalMemorization(List<List<Integer>> triangle) {
+        int rows=triangle.size();
+        //getting size of last row which will be our column
+        int columns= triangle.get(rows-1).size();
+        int dp[][] = new int[rows][columns];
+
+        for(int[] row : dp)
+        Arrays.fill(row,-1);
+        return calculateSum(triangle,0,0,dp);
+    }
+
+    public int minimumTotalTabular(List<List<Integer>> triangle) {
+        int rows=triangle.size();
+        //getting size of last row which will be our column
+        int columns= triangle.get(rows-1).size();
+        int dp[][] = new int[rows][columns];
+        for(int[] row : dp)
+        Arrays.fill(row,-1);
+        dp[0][0]=triangle.get(0).get(0);
+
+        for(int level=1;level<rows;level++)
+        {
+            int maxCol = triangle.get(level).size();
+            for(int currentCol=0;currentCol<maxCol;currentCol++)
+            {
+                int previous = Integer.MAX_VALUE;
+                //we are checking here if our current element is not 
+                //the last element of the row bcaz if it is last then there is 
+                //no value below it 
+                //ex -
+                //2
+                //3,4  there is no value directly below 4 we can only take 2+4 in dp
+                if(currentCol+1 < maxCol)
+                {
+                    previous = dp[level-1][currentCol];
+                }
+                int leftDiagonalValue = Integer.MAX_VALUE;
+                if(currentCol>0)
+                leftDiagonalValue = dp[level-1][currentCol-1];
+
+                //System.out.println(previous +" -- "+ leftDiagonalValue);
+                dp[level][currentCol] = triangle.get(level).get(currentCol) + 
+                Math.min(previous,leftDiagonalValue);
+            }
+        }
+        //min value will be in last dp row 
+        int min=Integer.MAX_VALUE;
+        for(int i=0;i<columns;i++)
+        {
+            min=Math.min(min,dp[rows-1][i]);
+        }
+        return min;
+    }
+
+    //space optimized
+    public int minimumTotal(List<List<Integer>> triangle) {
+        int n = triangle.size();
+        // Create two arrays to store intermediate results: front and cur
+        int[] front = new int[n]; // Stores the results for the current row
+        int[] cur = new int[n];   // Stores the results for the next row
+
+        // Initialize the front array with the values from the bottom row of the triangle
+        for (int j = 0; j < n; j++) {
+            front[j] =triangle.get(n-1).get(j);
+        }
+        // Starting from the second to last row, calculate the minimum path sum for each element
+        for (int i = n - 2; i >= 0; i--) {
+            //int last element index will be equal to index of the row
+            for (int j = i; j >= 0; j--) {
+                // Calculate the two possible paths: moving down or moving diagonally
+                int down = triangle.get(i).get(j) + front[j];
+                int diagonal = triangle.get(i).get(j) + front[j + 1];
+
+                // Store the minimum of the two paths in the cur array
+                cur[j] = Math.min(down, diagonal);
+            }
+            
+            // Update the front array with the values from the cur array for the next row
+            front = cur.clone();
+        }
+
+        // The result is stored at the top of the front array
+        return front[0];
+    }
+}

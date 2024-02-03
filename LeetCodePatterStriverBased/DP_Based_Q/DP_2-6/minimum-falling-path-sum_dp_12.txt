@@ -1,0 +1,42 @@
+https://leetcode.com/problems/minimum-falling-path-sum/
+
+class Solution {
+    int maxValue=1_000_000_007;
+    public int calculateSum(int[][] matrix,int n,int r,int c)
+    {
+        if()
+        {
+            
+        }
+        if((r<n && c<n) && (c>=0))
+        {
+            int sum = matrix[r][c];
+            int rightDiagonal = calculateSum(matrix,n,r+1,c+1);
+            int leftDiagonal = calculateSum(matrix,n,r+1,c-1);
+            int bottom = calculateSum(matrix,n,r+1,c);
+            sum=sum+Math.min(Math.min(rightDiagonal,rightDiagonal),bottom);
+            return sum;
+        }
+        else
+        {
+            //out of bounds
+            return maxValue;
+        }
+
+    } 
+    public int minFallingPathSum(int[][] matrix) {
+        int n=matrix.length;
+        int sum=0;
+        int min= Integer.MAX_VALUE;
+        for(int c=0;c<n;c++)
+        {
+            sum=matrix[0][c];
+            int rightDiagonal = calculateSum(matrix,n,1,c+1);
+            int leftDiagonal = calculateSum(matrix,n,1,c-1);
+            int bottom = calculateSum(matrix,n,1,c);
+            sum=sum+Math.min(Math.min(rightDiagonal,rightDiagonal),bottom);
+            min=Math.min(sum,min);
+        }
+        return min;
+    }
+}

@@ -1,0 +1,92 @@
+https://leetcode.com/problems/unique-paths/
+class Solution {
+    int maxrow=0,maxcol=0;
+    
+    //Memorization
+    private int functionTraverse(int m,int n,int dp[][])
+    {
+        
+        if(m >= maxrow || n >= maxcol)
+        {
+            return 0;
+
+        }         
+        else if(m == maxrow-1 && n == maxcol-1)
+         return 1;
+        else if(dp[m][n]!=-1)
+        return dp[m][n];
+
+        dp[m][n] = functionTraverse(m+1,n,dp) + functionTraverse(m,n+1,dp);
+
+        return dp[m][n];
+    }
+    public int uniquePathsMemorization(int m, int n) {
+        maxrow=m;
+        maxcol=n;
+        int dp[][] = new int[m][n];       
+        for (int[] row : dp)
+            Arrays.fill(row, -1);       
+        return functionTraverse(0,0,dp);       
+    }
+
+    public int uniquePathsTabular(int m, int n){
+        int dp[][] = new int[m][n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                // Base condition: If we are at the top-left cell (0, 0), 
+                //there's one way to reach it.
+                if (i == 0 && j == 0) {
+                    dp[i][j] = 1;
+                    continue;
+                }
+
+                int up = 0;
+                int left = 0;
+
+                // Calculate the number of ways by moving up (if possible) and left (if possible)
+                if (i > 0)
+                    up = dp[i - 1][j];
+                if (j > 0)
+                    left = dp[i][j - 1];
+
+                // Store the total number of ways to reach the current cell in the DP array
+                dp[i][j] = up + left;
+            }
+        }
+
+        // Return the number of ways to reach the bottom-right cell (m-1, n-1)
+        return dp[m - 1][n - 1]; 
+    }
+
+    public int uniquePaths(int m, int n){
+        int prev[] =new int[n];
+        for (int i = 0; i < m; i++) {
+            int temp[]=new int[n];
+            for (int j = 0; j < n; j++) {
+                // Base condition: If we are at the top-left cell (0, 0), 
+                //there's one way to reach it.
+                if (i == 0 && j == 0) {
+                    temp[j] = 1;
+                    continue;
+                }
+
+                int up = 0;
+                int left = 0;
+
+                // Calculate the number of ways by moving up (if possible) and left (if possible)
+                if (i > 0)
+                    up = prev[j];
+                if (j > 0)
+                    left = temp[j - 1];
+
+                // Store the total number of ways to reach the current cell in the DP array
+                temp[j] = up + left;
+            }
+            // Set the temporary array as the previous array for the next row
+            prev=temp;
+        }
+
+        // Return the number of ways to reach the bottom-right cell (m-1, n-1)
+        return prev[n - 1]; 
+    }
+}
