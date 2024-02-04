@@ -1,0 +1,154 @@
+https://leetcode.com/problems/partition-equal-subset-sum/
+class Solution {
+    public boolean memorization(int[] nums,int dp[][],int ind,int target)
+    {
+        if(target == 0)  return true;
+        
+        if(ind>=nums.length) return false;
+
+        if(ind==nums.length-1) return target==nums[ind];
+
+        if(dp[ind][target]!=-1)  return dp[ind][target] == 0 ?false:true; 
+
+        //not taken
+        boolean notTaken = memorization(nums,dp,ind+1,target);
+
+        boolean taken=false;
+        //taken
+        if(target>=nums[ind])
+        taken = memorization(nums,dp,ind+1,target-nums[ind]);
+
+        dp[ind][target] = (notTaken||taken) ? 1:0;
+        return (notTaken||taken);
+    }
+    public boolean canPartitionMemorization(int[] nums) {
+        int totalSum=0;
+        for(int n:nums)
+        {
+            totalSum=totalSum+n;
+        }
+        //base Case
+        //we can divide the array if sum is odd
+        if(totalSum%2==1)
+        return false;
+
+        int sumOfFirstHalf = totalSum/2;
+        //if we can reach this sum that means 
+        //there is another subset with the equal sum and we can split the array
+        //sumOfFirstHalf+sumOfSecondHalf = totalSum;
+
+        int dp[][]=new int[nums.length][sumOfFirstHalf+1];
+        for(int row[]:dp)
+        {
+            Arrays.fill(row,-1);
+        }
+        return memorization(nums,dp,0,sumOfFirstHalf);
+    }
+
+
+    public boolean canPartitionTabular(int[] nums) {
+        int totalSum=0;
+        for(int n:nums)
+        {
+            totalSum=totalSum+n;
+        }
+        //base Case
+        //we can divide the array if sum is odd
+        if(totalSum%2==1)
+        return false;
+
+        int sumOfFirstHalf = totalSum/2;
+        //if we can reach this sum that means 
+        //there is another subset with the equal sum and we can split the array
+        //sumOfFirstHalf+sumOfSecondHalf = totalSum;
+
+        boolean dp[][]=new boolean[nums.length][sumOfFirstHalf+1];
+        //setting entire first column as true
+        //bcaz for first column target value is 0 base case 1 
+        //when target is 0 we need to set it to true
+        for(int r=0;r<nums.length;r++)
+        {
+            dp[r][0]=true;
+        }
+        
+        /**
+        1)Initialize the first row of the DP table this is a base case arr[0] will be 
+        true at dp[0] first row
+
+        2)when we reach index 0 and target left is equal to arr[0] then only we will return 
+        true otherwise it will be false. 
+        so in tabulation we are initializing like that only
+        3)In my case if(ind==nums.length-1)
+        return target==nums[ind]; 
+        this is the base case 
+        in a bottom up recursion we will check for ind==0
+        return target==nums[0];
+         */
+        if (nums[0] <= sumOfFirstHalf) {
+                dp[0][nums[0]] = true;
+        }
+
+        for(int ind=1;ind<nums.length;ind++)
+        {
+            for(int target=1;target<=sumOfFirstHalf;target++)
+            {
+                //not taken
+            boolean notTaken = dp[ind-1][target];
+
+            boolean taken=false;
+            //taken
+            if(target>=nums[ind])
+            taken = dp[ind-1][target-nums[ind]];
+
+            dp[ind][target]=(notTaken||taken);
+            }
+        }
+        return dp[nums.length-1][sumOfFirstHalf];
+
+    }
+    //space optimized
+    public boolean canPartition(int[] nums) {
+        int totalSum=0;
+        for(int n:nums)
+        {
+            totalSum=totalSum+n;
+        }
+        //base Case
+        //we can divide the array if sum is odd
+        if(totalSum%2==1)
+        return false;
+
+        int sumOfFirstHalf = totalSum/2;
+        //if we can reach this sum that means 
+        //there is another subset with the equal sum and we can split the array
+        //sumOfFirstHalf+sumOfSecondHalf = totalSum;
+
+        boolean prev[] = new boolean[sumOfFirstHalf+1];
+        //base case discussed above
+        if(nums[0]<=sumOfFirstHalf)
+        {
+            prev[nums[0]]=true;
+        }
+
+        for(int ind =1;ind<nums.length;ind++)
+        {
+            boolean cur[] = new boolean[sumOfFirstHalf+1];
+            //base case in tabular first entire column was zero
+            cur[0]=true;
+            for(int target=1;target<=sumOfFirstHalf;target++)
+            {
+                boolean notTaken = prev[target];
+
+                boolean taken=false;
+
+                if(nums[ind]<=target)
+                {
+                    taken=prev[target-nums[ind]];
+                }
+                cur[target] = (notTaken||taken);
+            }
+            prev=cur;
+        }
+        return prev[sumOfFirstHalf];
+    }
+}

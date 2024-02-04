@@ -1,0 +1,114 @@
+https://leetcode.com/problems/minimum-falling-path-sum/
+
+class Solution {
+    int maxValue=1_000_000_7;
+    public int calculateSum(int[][] matrix,int n,int r,int c,Integer[][] dp)
+    {
+        if (c >= n || c < 0) // base-case 1
+            return (int) Math.pow(10, 7);
+
+        if(r==n-1 )
+        return matrix[r][c];
+
+        if(dp[r][c] != null)
+        return dp[r][c];
+        
+            int rightDiagonal= matrix[r][c] + calculateSum(matrix,n,r+1,c+1,dp);
+            int leftDiagonal = matrix[r][c] + calculateSum(matrix,n,r+1,c-1,dp);
+            int bottom =       matrix[r][c] + calculateSum(matrix,n,r+1,c,dp);
+            int sum=Math.min(Math.min(leftDiagonal,rightDiagonal),bottom);
+            dp[r][c]=sum;
+            return sum;
+    } 
+    public int minFallingPathSumMemorization(int[][] matrix) {
+        if(matrix.length==1 && matrix[0].length==1)
+        return matrix[0][0];
+        int n=matrix.length;
+        Integer[][] dp = new Integer[n][n];
+        int sum=0;
+        int min= Integer.MAX_VALUE;
+        for(int c=0;c<n;c++)
+        {
+            int rightDiagonal =matrix[0][c] + calculateSum(matrix,n,1,c+1,dp);
+            int leftDiagonal =matrix[0][c] + calculateSum(matrix,n,1,c-1,dp);
+            int bottom =matrix[0][c] + calculateSum(matrix,n,1,c,dp);
+            sum=Math.min(Math.min(leftDiagonal,rightDiagonal),bottom);
+            min=Math.min(sum,min);
+        }
+        return min;
+    }
+    
+
+    public int minFallingPathSumTabular(int[][] matrix) {
+        if(matrix.length==1 && matrix[0].length==1)
+        return matrix[0][0];
+        int n=matrix.length;
+        Integer[][] dp = new Integer[n][n];
+        int sum=0;
+        int min= Integer.MAX_VALUE;
+        //initializing dp first row
+        for(int c=0;c<n;c++)
+        {
+            dp[0][c] = matrix[0][c];
+        }
+
+        for(int r=1;r<n;r++)
+        {
+            for(int c=0;c<n;c++)
+            {
+                int bottom = maxValue,leftDiagonal=maxValue,rightDiagonal=maxValue;
+                bottom=matrix[r][c]+dp[r-1][c];
+                if(c>0)
+                leftDiagonal =matrix[r][c] + dp[r-1][c-1];
+                if(c+1<n)
+                rightDiagonal = matrix[r][c] + dp[r-1][c+1];
+
+                dp[r][c] =Math.min(Math.min(leftDiagonal,rightDiagonal),bottom);
+            }
+        }
+        for(int c=0;c<n;c++)
+        {
+            min=Math.min(min,dp[n-1][c]) ;
+        }
+        return min;
+    }
+
+    public int minFallingPathSum(int[][] matrix) {
+        if(matrix.length==1 && matrix[0].length==1)
+        return matrix[0][0];
+        int n=matrix.length;
+        Integer[] prev = new Integer[n];
+        int sum=0;
+        int min= Integer.MAX_VALUE;
+
+        //initializing dp first row
+        for(int c=0;c<n;c++)
+        {
+            prev[c] = matrix[0][c];
+        }
+
+        for(int r=1;r<n;r++)
+        {
+            Integer[] current = new Integer[n];
+            for(int c=0;c<n;c++)
+            {
+                int bottom = maxValue,leftDiagonal=maxValue,rightDiagonal=maxValue;
+                bottom=matrix[r][c]+prev[c];
+                if(c>0)
+                leftDiagonal =matrix[r][c] + prev[c-1];
+                if(c+1<n)
+                rightDiagonal = matrix[r][c] + prev[c+1];
+
+                current[c] =Math.min(Math.min(leftDiagonal,rightDiagonal),bottom);
+
+            }
+            prev=current;
+
+        }
+        for(int c=0;c<n;c++)
+        {
+            min=Math.min(min,prev[c]) ;
+        }
+        return min;
+    }
+}
