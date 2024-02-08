@@ -1,0 +1,80 @@
+518. Coin Change II
+DP-22
+class Solution {
+    private int calculate(int ind, int target, int[] coins, int dp[][]) {
+        if (target == 0)
+            return 1;
+
+        if (ind == 0) {
+            if (target % coins[0] == 0)
+                return 1;
+            else
+                return 0;
+        }
+        if (dp[ind][target] != -1) {
+            return dp[ind][target];
+        }
+
+        int notTaken = calculate(ind - 1, target, coins, dp);
+        int taken = 0;
+        if (target >= coins[ind])
+            taken = calculate(ind, target - coins[ind], coins, dp);
+
+        dp[ind][target] = taken + notTaken;
+
+        return dp[ind][target];
+    }
+
+    public int changeMemo(int amount, int[] coins) {
+        int[][] dp = new int[coins.length][amount + 1];
+        for (int row[] : dp) {
+            Arrays.fill(row, -1);
+        }
+        return calculate(coins.length - 1, amount, coins, dp);
+    }
+
+    public int changeTabu(int amount, int[] coins) {
+        int[][] dp = new int[coins.length][amount + 1];
+
+        // base case 1 when target 0 return 1
+        for (int r = 0; r < coins.length; r++) {
+            dp[r][0] = 1;
+        }
+        for (int t = 1; t <= amount; t++) {
+            if (t % coins[0] == 0)
+                dp[0][t] = 1;
+        }
+        for (int ind = 1; ind < coins.length; ind++) {
+            for (int target = 1; target <= amount; target++) {
+                int notTaken =dp[ind-1][target] ;
+                int taken = 0;
+                if (target >= coins[ind])
+                    taken =dp[ind][target - coins[ind]];
+                dp[ind][target] = taken + notTaken;
+            }
+        }
+        return dp[coins.length - 1][amount];
+    }
+    //space optimized solu
+    public int change(int amount, int[] coins) {
+        int prev[] = new int [amount + 1];
+
+        for (int t = 0; t <= amount; t++) {
+            if (t % coins[0] == 0)
+                prev[t] = 1;
+        }
+        
+        for (int ind = 1; ind < coins.length; ind++) {
+            int current[] = new int[amount + 1];
+            for (int target = 0; target <= amount; target++) {
+                int notTaken = prev[target];
+                int taken = 0;
+                if (target >= coins[ind])
+                    taken = current[target - coins[ind]];
+                current[target] = taken + notTaken;
+            }
+            prev=current;
+        }
+        return prev[amount];
+    }
+}
